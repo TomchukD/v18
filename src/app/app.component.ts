@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AppModule } from 'src/app/app.module';
+import { MenuModule } from 'src/app/components/menu/menu.module';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+
 })
 export class AppComponent {
   title = 'v18';
