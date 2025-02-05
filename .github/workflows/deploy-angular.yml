@@ -1,38 +1,40 @@
-name: Deploy Angular to GitHub Pages
-
+name: Deploy Angular app
 on:
-  workflow_dispatch:  # Ручной запуск
+  push:
+    branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write # Явно указываем права на запись
   pages: write
   id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout репозиторий
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Установка Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18  # Или нужная версия
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Установка зависимостей
+      - name: Install dependencies
         run: npm install
 
-      - name: Сборка Angular
-        run: npx ng build --configuration=production --base-href "/v18"
+      - name: Build
+        run: npx ng build --configuration=production --base-href "/v18-material/"
 
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist/v18
-          branch: gh-pages
-          token: ${{ secrets.GITHUB_TOKEN }}  # Добавляем токен
-          clean: true  # Очищаем целевую ветку перед деплоем
-          single-commit: true  # Используем один коммит вместо истории
+      - name: Deploy to GitHub Pages
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout --orphan gh-pages
+          git reset
+          cp -r dist/v18-material/* .
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin gh-pages --force
 
