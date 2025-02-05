@@ -19,9 +19,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "baseHref": "/tomchukd/",
-            "deployUrl": "/tomchukd/",
-            "outputPath": "dist/v18",
+            "outputPath": "dist/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
