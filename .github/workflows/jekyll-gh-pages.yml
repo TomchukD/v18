@@ -30,7 +30,7 @@ jobs:
         run: npm install
         
       - name: Build
-        run: npm run build --configuration=production --base-href="/v18"
+        run: npm run build --configuration=production --base-href="/tomchukd.github.io/"
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
