@@ -27,9 +27,12 @@ jobs:
       - name: Сборка Angular
         run: npx ng build --configuration=production --base-href "/v18"
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
+          folder: dist/v18-material
           branch: gh-pages
-          folder: dist//v18  # Укажите название папки после сборки
+          token: ${{ secrets.GITHUB_TOKEN }}  # Добавляем токен
+          clean: true  # Очищаем целевую ветку перед деплоем
+          single-commit: true  # Используем один коммит вместо истории
 
