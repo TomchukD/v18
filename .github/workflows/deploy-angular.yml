@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Сборка Angular
-        run: ng build --configuration=production --base-href "/v18-material"
+        run: npx ng build --configuration=production --base-href "/v18-material"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
