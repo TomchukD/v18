@@ -1,0 +1,50 @@
+name: Deploy Angular app
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: write # Явно указываем права на запись
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npx ng build --configuration=production --base-href "/v18/"
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout --orphan gh-pages
+          git reset
+          cp -r dist/v18/* .
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin gh-pages --force
+      - name: Create Deployment Comment
+        run: |
+          REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
+          echo "🚀 Project has been deployed to: https://$REPO_OWNER.github.io/v18" >> $GITHUB_STEP_SUMMARY
+          
+          if [ ! -z "${{ github.event.pull_request.number }}" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "🚀 Project deployed to: https://$REPO_OWNER.github.io/v18"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
