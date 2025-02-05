@@ -37,4 +37,14 @@ jobs:
           git add .
           git commit -m "Deploy to GitHub Pages"
           git push origin gh-pages --force
+      - name: Create Deployment Comment
+        run: |
+          REPO_OWNER=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)
+          echo "🚀 Project has been deployed to: https://$REPO_OWNER.github.io/v18" >> $GITHUB_STEP_SUMMARY
+          
+          if [ ! -z "${{ github.event.pull_request.number }}" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "🚀 Project deployed to: https://$REPO_OWNER.github.io/v18"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
